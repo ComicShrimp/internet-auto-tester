@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: ./dockerfiles/speed.dockerfile
     restart: unless-stopped
-    # environment:
-    #   INTERVAL: set_your_interval
-    #   SERVER_ID: set_your_server
+    environment:
+      INTERVAL: ${INTERVAL:-3600}
+      SERVER_ID: ${SERVER_ID:-None}
 
   db:
     image: influxdb
