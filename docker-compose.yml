@@ -17,9 +17,9 @@ services:
 
   db:
     image: influxdb
-    container_name: db_influx
+    container_name: db_influxs
     volumes:
-      - ../resources/influx/:/var/lib/influxdb
+      - ../resources-internet-speed-test/influx/:/root/.influxdbv2
     ports:
       - '8083:8083'
       - '8086:8086'
@@ -29,3 +29,4 @@ services:
       DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
       DOCKER_INFLUXDB_INIT_ORG: internet-auto-tester
       DOCKER_INFLUXDB_INIT_BUCKET: speedtest
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}

@@ -31,16 +31,14 @@ do
 
     # Send data do influx
     # curl -i -XPOST "http://db:8086/write?db=$INFLUXDB_DB" -u admin:admin --data-binary "download,host=local value=$DOWNLOAD"
-    curl --request POST http://localhost:8086/api/v2/write \
+    curl --request POST "http://db:8086/api/v2/write?bucket=$INFLUXDB_INIT_BUCKET&org=$INFLUXDB_INIT_ORG" \
         --header "Authorization: Token $INFLUX_TOKEN" \
-        --data-urlencode "org=$INFLUXDB_INIT_ORG" \
-        --data-urlencode "bucket=$INFLUXDB_INIT_BUCKET" \
         --data-raw "
-        LATENCY,host=local value=$LATENCY
+        latency,host=local value=$LATENCY
         download,host=local value=$DOWNLOAD
-        UPLOAD,host=local value=$UPLOAD
-        PACKET_LOSS,host=local value=$PACKET_LOSS
-        RESULT_URL,host=local value=$RESULT_URL
+        upload,host=local value=$UPLOAD
+        packet_loss,host=local value=$PACKET_LOSS
+        result_url,host=local value=\"$RESULT_URL\"
         "
 
     sleep $INTERVAL
