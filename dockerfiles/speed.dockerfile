@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 RUN apt-get update && apt-get upgrade -y
 
-RUN apt-get install wget -y
+RUN apt-get install wget curl -y
 
 RUN wget -c https://ookla.bintray.com/download/ookla-speedtest-1.0.0-x86_64-linux.tgz 
 RUN tar zxvf ookla-speedtest-1.0.0-x86_64-linux.tgz
