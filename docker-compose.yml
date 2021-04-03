@@ -8,25 +8,41 @@ services:
     restart: unless-stopped
     environment:
       INTERVAL: ${INTERVAL:-3600}
-      INFLUXDB_ADMIN_USER: admin
-      INFLUXDB_ADMIN_PASSWORD: admin
-      INFLUXDB_INIT_BUCKET: speedtest
-      INFLUXDB_INIT_ORG: internet-auto-tester
       SERVER_ID: ${SERVER_ID}
+      INFLUXDB_INIT_BUCKET: ${INFLUXDB_INIT_BUCKET:-speedtest}
+      INFLUXDB_INIT_ORG: ${INFLUXDB_INIT_ORG:-internet-auto-tester}
       INFLUX_TOKEN: ${INFLUX_TOKEN}
 
   db:
     image: influxdb
-    container_name: db_influxs
+    container_name: internet_db
     volumes:
-      - ../resources-internet-speed-test/influx/:/root/.influxdbv2
+      - ../resources-influx:/var/lib/influxdb2
     ports:
       - '8083:8083'
       - '8086:8086'
+    restart: unless-stopped
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
-      DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
-      DOCKER_INFLUXDB_INIT_ORG: internet-auto-tester
-      DOCKER_INFLUXDB_INIT_BUCKET: speedtest
+      DOCKER_INFLUXDB_INIT_USERNAME: ${DOCKER_INFLUXDB_INIT_USERNAME:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${DOCKER_INFLUXDB_INIT_PASSWORD:-adminpassword}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_INIT_BUCKET:-speedtest}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_INIT_ORG:-internet-auto-tester}
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+
+  dashboard:
+    image: grafana/grafana:latest
+    container_name: internet_dashboard
+    volumes:
+      - ./config/datasources/:/etc/grafana/provisioning/datasources
+      - ./config/dashboards/:/etc/grafana/provisioning/dashboards
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+volumes:
+  grafana-storage:

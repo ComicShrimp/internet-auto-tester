@@ -1,0 +1,14 @@
+apiVersion: 1
+datasources:
+  - name: influxdb
+    type: influxdb
+    access: proxy
+    url: http://db:8086
+    user: grafana
+    secureJsonData:
+      token: token_from_.env
+      password: password_from_.env
+    jsonData:
+      version: Flux
+      organization: org_from_.env
+      defaultBucket: bucket_from_.env
