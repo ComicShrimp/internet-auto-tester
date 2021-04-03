@@ -34,7 +34,7 @@ do
     curl --request POST "http://db:8086/api/v2/write?bucket=$INFLUXDB_INIT_BUCKET&org=$INFLUXDB_INIT_ORG" \
         --header "Authorization: Token $INFLUX_TOKEN" \
         --data-raw "
-        tests,host=local value=$LATENCY
+        latency,host=local value=$LATENCY
         download,host=local value=$DOWNLOAD
         upload,host=local value=$UPLOAD
         packet_loss,host=local value=$PACKET_LOSS
